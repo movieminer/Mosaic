@@ -32,27 +32,24 @@ public class Main extends Application {
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         GridPane root = new GridPane();
         createBoard(root);
-        root.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                int x = getCoord(mouseEvent.getX());
-                int y = getCoord(mouseEvent.getY());
-                if (mouseEvent.getButton() == MouseButton.PRIMARY)
-                    game.getCell(x,y).setType(game.getCell(x,y).getType().next());
-                else if (mouseEvent.getButton() == MouseButton.SECONDARY)
-                    game.getCell(x,y).setType(game.getCell(x,y).getType().previous());
-                createBoard(root);
-                game.printTypes();
-                if (game.checkCell(x,y)){
-                    if(game.checkBoard()){
-                        System.out.println("CORRECT SOLUTION!");
-                    }
+        root.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            int x = getCoord(mouseEvent.getX());
+            int y = getCoord(mouseEvent.getY());
+            if (mouseEvent.getButton() == MouseButton.PRIMARY)
+                game.getCell(x,y).setType(game.getCell(x,y).getType().next());
+            else if (mouseEvent.getButton() == MouseButton.SECONDARY)
+                game.getCell(x,y).setType(game.getCell(x,y).getType().previous());
+            createBoard(root);
+            game.printTypes();
+            if (game.checkCell(x,y)){
+                if(game.checkBoard()){
+                    System.out.println("CORRECT SOLUTION!");
                 }
-
             }
+
         });
         primaryStage.setTitle("Mosaic Puzzle");
         primaryStage.setScene(new Scene(root));
@@ -86,6 +83,11 @@ public class Main extends Application {
                         {"-1","-1","3","-1","2"},
                         {"1","-1","-1","-1","-1"}};
         Game game = new Game(5, board);
+
+        Example ex = new Example(1);
+        System.out.println(ex.getSize());
+        System.out.println(ex.getString());
+
         game.printBoard();
         game.printTypes();
         launch(args);
