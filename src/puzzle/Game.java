@@ -48,7 +48,7 @@ public class Game {
     public boolean checkBoard(){
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                if (!checkCell(x,y)){
+                if (!checkCell(x,y) || board[y][x].getType() == Type.UNDEFINED){
                     return false;
                 }
             }

@@ -1,5 +1,6 @@
 package puzzle;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Example {
@@ -22,10 +23,19 @@ public class Example {
     private String data;
     private int size;
 
-    public Example(int i){
-        String[] str = strings[i].split(":");
+    public Example(){
+        String[] str = strings[(int)(Math.random()* strings.length)].split(":");
+        Scanner scanner = new Scanner(str[0]);
 
-        this.size = Character.getNumericValue(str[0].charAt(0));
+        this.size = Integer.parseInt(str[0].split("x")[0]);
+        this.data = str[1];
+    }
+
+    public Example(String config){
+        String[] str = config.split(":");
+        Scanner scanner = new Scanner(str[0]);
+
+        this.size = Integer.parseInt(str[0].split("x")[0]);
         this.data = str[1];
     }
 
@@ -37,5 +47,27 @@ public class Example {
         return data;
     }
 
+    public String[][] board() {
+        String str = data;
+        ArrayList<String> converted = new ArrayList<String>();
 
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) > 58){
+                for (int j = 0; j < str.charAt(i)-96; j++) {
+                    converted.add("-1");
+                }
+            }
+            else
+                converted.add(String.valueOf(str.charAt(i)));
+        }
+        return convertDoubleArray(converted);
+    }
+
+    public String[][] convertDoubleArray(ArrayList<String> arraystr) {
+        String[][] result = new String[size][size];
+        for (int i = 0; i < arraystr.size(); i++) {
+            result[(int) Math.floor(i/size)][i%size] = arraystr.get(i);
+        }
+        return result;
+    }
 }

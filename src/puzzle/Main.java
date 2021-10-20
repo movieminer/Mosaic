@@ -17,19 +17,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class Main extends Application {
-    int SIZE = 5;
+    Example test = new Example("10x10:1e654c2a346d3a023556b4d245c244555a3a44666a54b5g33d6a7b3a322e2a2001a5a2");
+    int SIZE = test.getSize();
     int GRID_SIZE = 50;
-    String[][] board =
-            {{"4","-1","2","-1","2"},
-                    {"-1","4","3","-1","-1"},
-                    {"-1","-1","4","-1","2"},
-                    {"-1","-1","3","-1","2"},
-                    {"1","-1","-1","-1","-1"}};
-
-    Game game = new Game(SIZE, board);
-
+    Game game = new Game(SIZE, test.board());
 
     @Override
     public void start(Stage primaryStage) {
@@ -76,20 +70,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        String[][] board =
-                        {{"4","-1","2","-1","2"},
-                        {"-1","4","3","-1","-1"},
-                        {"-1","-1","4","-1","2"},
-                        {"-1","-1","3","-1","2"},
-                        {"1","-1","-1","-1","-1"}};
-        Game game = new Game(5, board);
-
-        Example ex = new Example(1);
-        System.out.println(ex.getSize());
-        System.out.println(ex.getString());
-
-        game.printBoard();
-        game.printTypes();
         launch(args);
     }
 }
