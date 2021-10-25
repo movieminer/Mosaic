@@ -1,15 +1,16 @@
 package puzzle;
 
 public class Game {
-    private final int size;
+    private final int WIDTH, HEIGHT;
     private final Cell[][] board;
 
-    public Game(int size, String[][] config){
-        this.size = size;
-        board = new Cell[size][size];
+    public Game(int width, int height, String[][] config){
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        board = new Cell[height][width];
 
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
                     board[y][x] = new Cell(x,y, Integer.parseInt(config[y][x]));
             }
         }
@@ -37,7 +38,7 @@ public class Game {
             return true;
         }
         for (Dir dir : Dir.values() ) {
-            if (x+dir.x >= 0 && x+dir.x < size && y+dir.y >= 0 && y+dir.y < size){
+            if (x+dir.x >= 0 && x+dir.x < WIDTH && y+dir.y >= 0 && y+dir.y < HEIGHT){
                 if (board[y+dir.y][x+dir.x].getType() == Type.BLACK)
                     count++;
             }
@@ -46,8 +47,8 @@ public class Game {
     }
 
     public boolean checkBoard(){
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
                 if (!checkCell(x,y) || board[y][x].getType() == Type.UNDEFINED){
                     return false;
                 }
@@ -59,8 +60,8 @@ public class Game {
 
 
     public void printBoard(){
-        for (int y=0; y<size; y++){
-            for (int x=0; x<size; x++){
+        for (int y=0; y<HEIGHT; y++){
+            for (int x=0; x<WIDTH; x++){
                 System.out.print(board[y][x] + "  ");
             }
             System.out.print("\n");
@@ -69,8 +70,8 @@ public class Game {
     }
 
     public void printTypes(){
-        for (int y=0; y<size; y++){
-            for (int x=0; x<size; x++){
+        for (int y=0; y<HEIGHT; y++){
+            for (int x=0; x<WIDTH; x++){
                 System.out.print(board[y][x].getType() + "  ");
             }
             System.out.print("\n");

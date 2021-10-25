@@ -20,10 +20,11 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class Main extends Application {
-    Example test = new Example("10x10:1e654c2a346d3a023556b4d245c244555a3a44666a54b5g33d6a7b3a322e2a2001a5a2");
-    int SIZE = test.getSize();
+    Example test = new Example("10x5:b33a1b1a4c1a0c4c0b3a1b1b3a43a1c2a5c");
+    int WIDTH = test.getWidth();
+    int HEIGHT = test.getHeight();
     int GRID_SIZE = 50;
-    Game game = new Game(SIZE, test.board());
+    Game game = new Game(WIDTH, HEIGHT, test.board());
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,8 +46,9 @@ public class Main extends Application {
             }
 
         });
-        primaryStage.setTitle("Mosaic Puzzle");
+        primaryStage.setTitle("Mosaic #" + test.getInstance());
         primaryStage.setScene(new Scene(root));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
@@ -55,8 +57,8 @@ public class Main extends Application {
     }
 
     public void createBoard(GridPane root){
-        for (int y = 0; y < SIZE; y++) {
-            for (int x = 0; x < SIZE; x++) {
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
                 Rectangle box = new Rectangle(20,20,GRID_SIZE,GRID_SIZE);
                 box.setFill(game.getCell(x,y).getType().getColor());
                 box.setStroke(Color.BLACK);

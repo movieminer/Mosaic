@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Example {
-    private String[] strings = {
+    private final String[] strings = {
                         "5x5:a1a4c5d46b5f0a",
                         "5x5:a5b3b6d6863a6c45a2",
                         "5x5:b0a2442a33b5b5a5a2a4b",
@@ -20,31 +20,44 @@ public class Example {
                         "5x5:a0b1a2e43g201a",
                         "5x5:e2a354a2a66a4c2a5a3",
                         "5x5:44a3f4a85b5b2b3b"};
-    private String data;
-    private int size;
+    private final String data;
+    private final int WIDTH, HEIGHT;
+    private final int puzzle_instance;
 
     public Example(){
-        String[] str = strings[(int)(Math.random()* strings.length)].split(":");
+        this.puzzle_instance = (int)(Math.random()* strings.length);
+        String[] str = strings[(puzzle_instance)].split(":");
         Scanner scanner = new Scanner(str[0]);
 
-        this.size = Integer.parseInt(str[0].split("x")[0]);
+        this.WIDTH = Integer.parseInt(str[0].split("x")[0]);
+        this.HEIGHT = Integer.parseInt(str[0].split("x")[1]);
         this.data = str[1];
     }
 
     public Example(String config){
+        this.puzzle_instance = 0;
         String[] str = config.split(":");
         Scanner scanner = new Scanner(str[0]);
 
-        this.size = Integer.parseInt(str[0].split("x")[0]);
+        this.WIDTH = Integer.parseInt(str[0].split("x")[0]);
+        this.HEIGHT = Integer.parseInt(str[0].split("x")[1]);
         this.data = str[1];
     }
 
-    public int getSize(){
-        return size;
+    public int getWidth(){
+        return WIDTH;
+    }
+
+    public int getHeight(){
+        return HEIGHT;
     }
 
     public String getString(){
         return data;
+    }
+
+    public int getInstance(){
+        return puzzle_instance;
     }
 
     public String[][] board() {
@@ -64,9 +77,9 @@ public class Example {
     }
 
     public String[][] convertDoubleArray(ArrayList<String> arraystr) {
-        String[][] result = new String[size][size];
+        String[][] result = new String[HEIGHT][WIDTH];
         for (int i = 0; i < arraystr.size(); i++) {
-            result[(int) Math.floor(i/size)][i%size] = arraystr.get(i);
+            result[(int) Math.floor(i/WIDTH)][i%WIDTH] = arraystr.get(i);
         }
         return result;
     }
