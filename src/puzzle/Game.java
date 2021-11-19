@@ -1,5 +1,7 @@
 package puzzle;
 
+import java.util.List;
+
 public class Game {
     private final int WIDTH, HEIGHT;
     private final Cell[][] board;
@@ -77,6 +79,17 @@ public class Game {
             System.out.print("\n");
         }
         System.out.print("\n");
+    }
+
+    public String SATNotU(){
+        StringBuilder sb = new StringBuilder();
+
+        for (Cell[] cells : board){
+            for (Cell cell : cells){
+                sb.append(cell.getRank(WIDTH)).append(" -").append(cell.getRank(WIDTH)).append(" 0").append('\n');
+            }
+        }
+        return sb.toString();
     }
 
 

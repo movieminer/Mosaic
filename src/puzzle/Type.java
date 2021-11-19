@@ -1,6 +1,6 @@
 package puzzle;
 
-import javafx.scene.paint.Color;;
+import javafx.scene.paint.Color;
 
 public enum Type {
     UNDEFINED(Color.CYAN),

@@ -35,6 +35,10 @@ public class Cell {
         type = newType;
     }
 
+    public int getRank(int WIDTH){
+        return (y*WIDTH + x + 1);
+    }
+
     @Override
     public String toString(){
         if (value != -1)
