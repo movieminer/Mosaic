@@ -30,7 +30,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         GridPane root = new GridPane();
         createBoard(root);
-        System.out.println(game.SATNotU());
+        System.out.println(game.SATNotUndefined());
         root.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             int x = getCoord(mouseEvent.getX());
             int y = getCoord(mouseEvent.getY());
