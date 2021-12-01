@@ -10,5 +10,6 @@
     <orderEntry type="library" name="javafx" level="application" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="com.github.dpaukov:combinatoricslib3:3.3.2" level="project" />
+    <orderEntry type="library" name="github.dpaukov.combinatoricslib3" level="project" />
   </component>
 </module>

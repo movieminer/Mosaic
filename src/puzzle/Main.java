@@ -20,7 +20,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class Main extends Application {
-    Example test = new Example();
+    Example test = new Example("5x5:2a6f43a3a3a3f10");
     int WIDTH = test.getWidth();
     int HEIGHT = test.getHeight();
     int GRID_SIZE = 50;
@@ -30,7 +30,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         GridPane root = new GridPane();
         createBoard(root);
-        System.out.println(game.SATNotUndefined());
         root.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             int x = getCoord(mouseEvent.getX());
             int y = getCoord(mouseEvent.getY());
