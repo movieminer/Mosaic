@@ -217,6 +217,7 @@ public class Game {
         List<List<Integer>> CNFs = Generator.combination(numbers).simple(value).stream().collect(Collectors.toList());
         for (List<Integer> cnf : CNFs) {
             for (int num : numbers) {
+                //Adds all numbers not yet in that clause in negative form
                 if (!cnf.contains(num))
                     cnf.add(num * -1);
             }
