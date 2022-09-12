@@ -3,7 +3,7 @@ package puzzle;
 import javafx.scene.paint.Color;
 
 public enum Type {
-    UNDEFINED(Color.CYAN),
+    UNDEFINED(Color.CORNFLOWERBLUE),
     BLACK(Color.GRAY),
     WHITE(Color.WHITE);
 

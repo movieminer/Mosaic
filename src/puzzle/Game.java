@@ -135,7 +135,7 @@ public class Game {
         return values;
     }
 
-    public List<List<Integer>> allCellsToDNF() {
+    public List<List<Integer>> allCellsToCNF() {
         List<List<Integer>> CNF = new ArrayList<>();
 
         for (Cell[] cells : board) {
@@ -149,7 +149,7 @@ public class Game {
     }
 
     public String CNFToDimacs() {
-        List<List<Integer>> cnf = allCellsToDNF();
+        List<List<Integer>> cnf = allCellsToCNF();
         StringBuilder sb = new StringBuilder();
 
         for (List<Integer> integers : cnf) {
