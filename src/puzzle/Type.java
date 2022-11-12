@@ -3,9 +3,9 @@ package puzzle;
 import javafx.scene.paint.Color;
 
 public enum Type {
-    UNDEFINED(Color.CORNFLOWERBLUE),
-    BLACK(Color.GRAY),
-    WHITE(Color.WHITE);
+    U(Color.CORNFLOWERBLUE),
+    B(Color.GRAY),
+    W(Color.WHITE);
 
     private Color color;
     private static Type[] values = values();

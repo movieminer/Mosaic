@@ -3,7 +3,7 @@ package puzzle;
 public class Cell {
     private int x,y;
     private int value;
-    Type type = Type.UNDEFINED;
+    Type type = Type.U;
 
     public Cell(int x, int y, int value) {
         this.x = x;
@@ -41,7 +41,7 @@ public class Cell {
 
     @Override
     public String toString(){
-        if (value != -1)
+        if (value >= 0)
             return String.valueOf(value);
         else
             return "*";

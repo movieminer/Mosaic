@@ -13,11 +13,21 @@ public class Game {
     private int nextFreeVariable;
     private int clauses = 0;
 
+    public Game(int width, int height){
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        this.board = new Cell[HEIGHT][WIDTH];
+        this.nextFreeVariable = 1;
+        for (int y = 0; y < HEIGHT; y++)
+            for (int x = 0; x < WIDTH; x++)
+                board[y][x] = new Cell(x, y, -1);
+    }
+
     public Game(int width, int height, String[][] config) {
         this.WIDTH = width;
         this.HEIGHT = height;
-        nextFreeVariable = WIDTH * HEIGHT + 1;
-        board = new Cell[height][width];
+        this.nextFreeVariable = WIDTH * HEIGHT + 1;
+        this.board = new Cell[HEIGHT][WIDTH];
 
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
@@ -51,14 +61,17 @@ public class Game {
     }
 
     public void solveWithDIMACS(String sol){
+        if (sol == null){
+            return;
+        }
         Scanner scanner = new Scanner(sol);
 
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 if (scanner.nextInt() < 0)
-                    changeType(x,y,Type.WHITE);
+                    changeType(x,y,Type.W);
                 else
-                    changeType(x,y,Type.BLACK);
+                    changeType(x,y,Type.B);
             }
 
         }
@@ -72,7 +85,7 @@ public class Game {
         }
         for (Dir dir : Dir.values()) {
             if (x + dir.x >= 0 && x + dir.x < WIDTH && y + dir.y >= 0 && y + dir.y < HEIGHT) {
-                if (board[y + dir.y][x + dir.x].getType() == Type.BLACK)
+                if (board[y + dir.y][x + dir.x].getType() == Type.B)
                     count++;
             }
         }
@@ -82,7 +95,7 @@ public class Game {
     public boolean checkBoard() {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
-                if (!checkCell(x, y) || board[y][x].getType() == Type.UNDEFINED) {
+                if (!checkCell(x, y) || board[y][x].getType() == Type.U) {
                     return false;
                 }
             }
@@ -135,18 +148,10 @@ public class Game {
         return values;
     }
 
-    public List<List<Integer>> allCellsToCNF() {
-        List<List<Integer>> CNF = new ArrayList<>();
+    /*
+        Start of the SAT encoding, Naive implementation
 
-        for (Cell[] cells : board) {
-            for (Cell cell : cells) {
-                if (cell.getValue() != -1) {
-                    CNF.addAll(CellToCNF(cell));
-                }
-            }
-        }
-        return CNF;
-    }
+     */
 
     public String CNFToDimacs() {
         List<List<Integer>> cnf = allCellsToCNF();
@@ -160,6 +165,19 @@ public class Game {
             clauses++;
         }
         return sb.toString();
+    }
+
+    public List<List<Integer>> allCellsToCNF() {
+        List<List<Integer>> CNF = new ArrayList<>();
+
+        for (Cell[] cells : board) {
+            for (Cell cell : cells) {
+                if (cell.getValue() != -1) {
+                    CNF.addAll(CellToCNF(cell));
+                }
+            }
+        }
+        return CNF;
     }
 
     public List<List<Integer>> CellToCNF(Cell cell) {
@@ -210,9 +228,9 @@ public class Game {
 
 
     public List<List<Integer>> allDNF(List<Integer> numbers, int value) {
-        List<Integer> negnum = new ArrayList<>();
-        for (int number : numbers)
-            negnum.add(number * -1);
+//        List<Integer> negnum = new ArrayList<>();
+//        for (int number : numbers)
+//            negnum.add(number * -1);
 
         List<List<Integer>> CNFs = Generator.combination(numbers).simple(value).stream().collect(Collectors.toList());
         for (List<Integer> cnf : CNFs) {
@@ -224,5 +242,12 @@ public class Game {
         }
         return CNFs;
     }
+
+    /*
+        Start of SAT Encoding, Improved implementation
+
+     */
+
+
 
 }
