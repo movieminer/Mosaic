@@ -28,7 +28,6 @@ import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class Main extends Application {
     int WIDTH = test.getWidth();
     int HEIGHT = test.getHeight();
     int GRID_SIZE = 50;
-    Game game = new Game(WIDTH, HEIGHT, test.board());
+    Game game = new Game(WIDTH, HEIGHT, "improved", test.board());
     String filename = "dimacs.cnf";
 
     @Override
@@ -98,7 +97,7 @@ public class Main extends Application {
             WIDTH = test.getWidth();
             HEIGHT = test.getHeight();
             GRID_SIZE = 50;
-            game = new Game(WIDTH, HEIGHT, test.board());
+            game = new Game(WIDTH, HEIGHT, "naive", test.board());
             root.getChildren().clear();
             createBoard(root);
         });

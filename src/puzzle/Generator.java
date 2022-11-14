@@ -21,8 +21,8 @@ public class Generator {
         return sb.toString();
     }
 
-    public void generateGame(){
-        Game game = new Game(width, height);
+    public void generateGame(String solve_method){
+        Game game = new Game(width, height, solve_method);
         String solution = generate();
         System.out.println(solution);
         game.solveWithDIMACS(solution);
@@ -31,6 +31,6 @@ public class Generator {
 
     public static void main(String[] args) {
         Generator generator = new Generator(10, 10);
-        generator.generateGame();
+        generator.generateGame("Naive");
     }
 }

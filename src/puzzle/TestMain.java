@@ -77,7 +77,7 @@ public class TestMain {
     public static void run(Example test){
         WIDTH = test.getWidth();
         HEIGHT = test.getHeight();
-        game = new Game(WIDTH, HEIGHT, test.board());
+        game = new Game(WIDTH, HEIGHT, "naive", test.board());
         filename = "dimacs.cnf";
         game.printBoard();
         //System.out.println(generateDIMACS(game));
@@ -93,7 +93,7 @@ public class TestMain {
     public static void runSimple(Example test){
         WIDTH = test.getWidth();
         HEIGHT = test.getHeight();
-        game = new Game(WIDTH, HEIGHT, test.board());
+        game = new Game(WIDTH, HEIGHT, "naive", test.board());
         filename = "dimacs.cnf";
         long start = System.currentTimeMillis();
         game.solveWithDIMACS(solve(game));

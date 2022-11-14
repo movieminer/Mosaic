@@ -3,6 +3,7 @@ package puzzle;
 import org.paukov.combinatorics3.Generator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -12,22 +13,25 @@ public class Game {
     private final Cell[][] board;
     private int nextFreeVariable;
     private int clauses = 0;
+    private final String solve_method;
 
-    public Game(int width, int height){
+    public Game(int width, int height, String solve_method) {
         this.WIDTH = width;
         this.HEIGHT = height;
         this.board = new Cell[HEIGHT][WIDTH];
         this.nextFreeVariable = 1;
+        this.solve_method = solve_method;
         for (int y = 0; y < HEIGHT; y++)
             for (int x = 0; x < WIDTH; x++)
                 board[y][x] = new Cell(x, y, -1);
     }
 
-    public Game(int width, int height, String[][] config) {
+    public Game(int width, int height, String solve_method, String[][] config) {
         this.WIDTH = width;
         this.HEIGHT = height;
         this.nextFreeVariable = WIDTH * HEIGHT + 1;
         this.board = new Cell[HEIGHT][WIDTH];
+        this.solve_method = solve_method;
 
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
@@ -60,8 +64,8 @@ public class Game {
             return "";
     }
 
-    public void solveWithDIMACS(String sol){
-        if (sol == null){
+    public void solveWithDIMACS(String sol) {
+        if (sol == null) {
             return;
         }
         Scanner scanner = new Scanner(sol);
@@ -69,9 +73,9 @@ public class Game {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 if (scanner.nextInt() < 0)
-                    changeType(x,y,Type.W);
+                    changeType(x, y, Type.W);
                 else
-                    changeType(x,y,Type.B);
+                    changeType(x, y, Type.B);
             }
 
         }
@@ -148,13 +152,9 @@ public class Game {
         return values;
     }
 
-    /*
-        Start of the SAT encoding, Naive implementation
-
-     */
-
     public String CNFToDimacs() {
         List<List<Integer>> cnf = allCellsToCNF();
+
         StringBuilder sb = new StringBuilder();
 
         for (List<Integer> integers : cnf) {
@@ -173,15 +173,23 @@ public class Game {
         for (Cell[] cells : board) {
             for (Cell cell : cells) {
                 if (cell.getValue() != -1) {
-                    CNF.addAll(CellToCNF(cell));
+                    CNF.addAll(cellToCNF(cell));
                 }
             }
         }
         return CNF;
     }
 
-    public List<List<Integer>> CellToCNF(Cell cell) {
-        return tseytin(allDNF(getSurroundingRanks(cell), cell.getValue()));
+    public List<List<Integer>> cellToCNF(Cell cell) {
+        if (solve_method.equals("naive"))
+            return tseytin(allDNF(getSurroundingRanks(cell), cell.getValue()));
+        else if (solve_method.equals("improved"))
+            return improvedCNF(getSurroundingRanks(cell), cell.getValue());
+        else {
+            System.out.println("Invalid solve method");
+            return null;
+        }
+
     }
 
     public List<List<Integer>> tseytin(List<List<Integer>> dnf) {
@@ -248,6 +256,62 @@ public class Game {
 
      */
 
+    public List<List<Integer>> improvedCNF(List<Integer> surroundingRanks, int value) {
+        List<List<Integer>> cnf = new ArrayList<>();
 
+        if (value == surroundingRanks.size()) {
+            for (int rank : surroundingRanks) {
+                List<Integer> clause = new ArrayList<>();
+                clause.add(rank);
+                cnf.add(clause);
+            }
+        } else if (value == 0) {
+            for (int rank : surroundingRanks) {
+                List<Integer> clause = new ArrayList<>();
+                clause.add(rank * -1);
+                cnf.add(clause);
+            }
+        }
+        else {
+            cnf = counterCNF(surroundingRanks, value);
+        }
+        return cnf;
+    }
+
+    private List<List<Integer>> counterCNF(List<Integer> surroundingRanks, int value) {
+        int n = surroundingRanks.size();
+
+        List<Integer> x = surroundingRanks;
+        List<List<Integer>> cnf = new ArrayList<>();
+        List<List<Integer>> c = new ArrayList<>();
+
+        for (int i = 0; i < n; i++){
+            List<Integer> counter = new ArrayList<>();
+            for (int j = 0; j < n; j++){
+                counter.add(nextFreeVariable);
+                nextFreeVariable++;
+            }
+            c.add(counter);
+        }
+
+        cnf.add(Arrays.asList(-x.get(0), c.get(0).get(0)));
+
+        for (int i = 1; i < n-1; i++){
+            cnf.add(Arrays.asList(-x.get(i), c.get(i).get(0)));
+            cnf.add(Arrays.asList(-c.get(i-1).get(0), c.get(i).get(0)));
+            cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(value-1)));
+
+            for (int j = 1; j < value; j++){
+                cnf.add(Arrays.asList(-c.get(i-1).get(j), c.get(i).get(j)));
+                cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(j-1), c.get(i).get(j)));
+            }
+        }
+
+        cnf.add(Arrays.asList(-x.get(n-1), -c.get(n-2).get(value-1)));
+        cnf.add(Arrays.asList(x.get(n-1), c.get(n-2).get(value-1)));
+        cnf.add(Arrays.asList(c.get(n-2).get(value-2)));
+
+        return cnf;
+    }
 
 }
