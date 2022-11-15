@@ -1,36 +1,76 @@
 package puzzle;
 
-import static java.lang.Math.random;
 import static java.lang.Math.round;
 
 public class Generator {
-    private static int width, height;
+    private final int WIDTH, HEIGHT;
 
     public Generator(int width, int height) {
-        Generator.width = width;
-        Generator.height = height;
+        this.WIDTH = width;
+        this.HEIGHT = height;
     }
 
-    public String generate(){
-        StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= width * height; i++) {
-            if (round(random()) == 0)
-                sb.append("-");
-            sb.append(i).append(" ");
+    public void generateTypes(Game game){
+
+        for (int y = 0; y < HEIGHT; y++){
+            for (int x = 0; x < WIDTH; x++){
+                game.changeType(x,y, Type.random());
             }
-        return sb.toString();
+        }
     }
 
-    public void generateGame(String solve_method){
-        Game game = new Game(width, height, solve_method);
-        String solution = generate();
-        System.out.println(solution);
-        game.solveWithDIMACS(solution);
-        game.printTypes();
+    public void generateClues(Game game){
+        for (int y=0; y < HEIGHT; y++){
+            for (int x=0; x < WIDTH; x++){
+                game.getCell(x,y).setValue(countBlack(game, x,y));
+            }
+        }
     }
 
-    public static void main(String[] args) {
-        Generator generator = new Generator(10, 10);
-        generator.generateGame("Naive");
+    public int countBlack(Game game, int x, int y){
+        int count=0;
+        Cell[][] board = game.getBoard();
+
+        for (Dir dir : Dir.values()) {
+            if (x + dir.x >= 0 && x + dir.x < WIDTH && y + dir.y >= 0 && y + dir.y < HEIGHT) {
+                if (board[y + dir.y][x + dir.x].getType() == Type.B)
+                    count++;
+            }
+        }
+        return count;
     }
+
+    private void uniqueSolve(Game game) {
+
+        for (int y=0; y < HEIGHT; y++){
+            for (int x=0; x < WIDTH; x++){
+                if (game.getCell(x,y).getValue()==-1)
+                    break;
+
+                int old_val = game.getCell(x,y).getValue();
+                game.getCell(x,y).setValue(-1);
+                if (SATSolver.solve(game)==null) {
+                    game.getCell(x, y).setValue(old_val);
+                    break;
+                }
+                else {
+                    uniqueSolve(game);
+                }
+            }
+        }
+
+
+    }
+
+    public Game generateNewGame(String solve_method){
+        Game game = new Game(WIDTH, HEIGHT, solve_method);
+
+        generateTypes(game);
+        generateClues(game);
+
+        uniqueSolve(game);
+
+        return game;
+    }
+
 }

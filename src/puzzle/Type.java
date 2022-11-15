@@ -25,4 +25,8 @@ public enum Type {
     public Type previous(){
         return values[(this.ordinal()+2) % values.length];
     }
+
+    public static Type random(){
+        return values[(int) (Math.round(Math.random())+1)];
+    }
 }

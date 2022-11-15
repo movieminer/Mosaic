@@ -1,5 +1,6 @@
 package puzzle;
 
+import com.sun.prism.impl.ps.CachingEllipseRep;
 import org.paukov.combinatorics3.Generator;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class Game {
         this.WIDTH = width;
         this.HEIGHT = height;
         this.board = new Cell[HEIGHT][WIDTH];
-        this.nextFreeVariable = 1;
+        this.nextFreeVariable = WIDTH * HEIGHT + 1;
         this.solve_method = solve_method;
         for (int y = 0; y < HEIGHT; y++)
             for (int x = 0; x < WIDTH; x++)
@@ -49,12 +50,20 @@ public class Game {
         return board[y][x];
     }
 
+    public Cell[][] getBoard(){
+        return board;
+    }
+
     public int getVariableCount() {
         return nextFreeVariable - 1;
     }
 
     public int getClausesCount() {
         return clauses;
+    }
+
+    public String getSolve_method(){
+        return solve_method;
     }
 
     public String getCellValue(int x, int y) {
@@ -127,6 +136,20 @@ public class Game {
         System.out.print("\n");
     }
 
+    public String generateCounterSolution() {
+        StringBuilder sb = new StringBuilder();
+
+        for (Cell[] cellRow : board){
+            for(Cell cell : cellRow){
+                if (cell.getType() == Type.B)
+                    sb.append("-");
+                sb.append(cell.getRank(WIDTH)).append(" 0\n");
+                clauses++;
+            }
+        }
+        return sb.toString();
+    }
+
     public String SATNotUndefined() {
         StringBuilder sb = new StringBuilder();
 
@@ -181,9 +204,9 @@ public class Game {
     }
 
     public List<List<Integer>> cellToCNF(Cell cell) {
-        if (solve_method.equals("naive"))
+        if (solve_method.equals("naive") || solve_method.equals("naiveGenerator"))
             return tseytin(allDNF(getSurroundingRanks(cell), cell.getValue()));
-        else if (solve_method.equals("improved"))
+        else if (solve_method.equals("improved") || solve_method.equals("improvedGenerator"))
             return improvedCNF(getSurroundingRanks(cell), cell.getValue());
         else {
             System.out.println("Invalid solve method");
@@ -295,21 +318,29 @@ public class Game {
         }
 
         cnf.add(Arrays.asList(-x.get(0), c.get(0).get(0)));
+        cnf.add(Arrays.asList(x.get(0), -c.get(0).get(0)));
 
-        for (int i = 1; i < n-1; i++){
+        for (int i = 1; i < value; i++){
+            cnf.add(Arrays.asList(-c.get(0).get(i)));
+        }
+
+        for (int i = 1; i < n; i++){
             cnf.add(Arrays.asList(-x.get(i), c.get(i).get(0)));
             cnf.add(Arrays.asList(-c.get(i-1).get(0), c.get(i).get(0)));
             cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(value-1)));
+            cnf.add(Arrays.asList(-c.get(i).get(0), x.get(i), c.get(i-1).get(0)));
 
             for (int j = 1; j < value; j++){
                 cnf.add(Arrays.asList(-c.get(i-1).get(j), c.get(i).get(j)));
                 cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(j-1), c.get(i).get(j)));
+
+                cnf.add(Arrays.asList(x.get(i), c.get(i-1).get(j), -c.get(i).get(j)));
+                cnf.add(Arrays.asList(c.get(i-1).get(j-1), c.get(i-1).get(j), -c.get(i).get(j)));
             }
         }
 
         cnf.add(Arrays.asList(-x.get(n-1), -c.get(n-2).get(value-1)));
-        cnf.add(Arrays.asList(x.get(n-1), c.get(n-2).get(value-1)));
-        cnf.add(Arrays.asList(c.get(n-2).get(value-2)));
+        cnf.add(Arrays.asList(c.get(n-1).get(value-1)));
 
         return cnf;
     }
