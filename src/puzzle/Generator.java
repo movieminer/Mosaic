@@ -41,7 +41,6 @@ public class Generator {
     }
 
     private void uniqueSolve(Game game) {
-
         for (int y=0; y < HEIGHT; y++){
             for (int x=0; x < WIDTH; x++){
                 if (game.getCell(x,y).getValue()==-1)
@@ -49,9 +48,9 @@ public class Generator {
 
                 int old_val = game.getCell(x,y).getValue();
                 game.getCell(x,y).setValue(-1);
-                if (SATSolver.solve(game)==null) {
+                game.printBoard();
+                if (SATSolver.solve(game)!=null) {
                     game.getCell(x, y).setValue(old_val);
-                    break;
                 }
                 else {
                     uniqueSolve(game);

@@ -143,14 +143,18 @@ public class Game {
             for(Cell cell : cellRow){
                 if (cell.getType() == Type.B)
                     sb.append("-");
-                sb.append(cell.getRank(WIDTH)).append(" 0\n");
-                clauses++;
+                sb.append(cell.getRank(WIDTH)).append(" ");
             }
         }
+        sb.append(" 0\n");
+        clauses++;
         return sb.toString();
     }
 
     public String SATNotUndefined() {
+        clauses = 0;
+        nextFreeVariable = WIDTH * HEIGHT + 1;
+
         StringBuilder sb = new StringBuilder();
 
         for (Cell[] cells : board) {

@@ -71,8 +71,10 @@ public class SATSolver {
                 System.out.println("Unsatisfiable !");
                 return null;
             }
-        } catch (ContradictionException | IOException | ParseFormatException | TimeoutException e) {
+        } catch (IOException | ParseFormatException | TimeoutException e) {
             e.printStackTrace();
+        } catch (ContradictionException e) {
+            throw new RuntimeException(e);
         }
         return solution;
     }

@@ -75,6 +75,7 @@ public class TestMain {
         int counter = 1;
         Game generatedGame = new Generator(5,5).generateNewGame("improvedGenerator");
         generatedGame.printBoard();
+        generatedGame.printTypes();
 //        for (String ex : examples) {
 //            System.out.println("Run: " + counter);
 //            run(new Example(ex));
