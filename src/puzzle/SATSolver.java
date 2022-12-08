@@ -64,11 +64,11 @@ public class SATSolver {
         try {
             IProblem problem = reader.parseInstance(filename);
             if (problem.isSatisfiable()) {
-                System.out.println("Satisfiable !");
+                //System.out.println("Satisfiable !");
                 solution = reader.decode(problem.model());
-                System.out.println(solution);
+                //System.out.println(solution);
             } else {
-                System.out.println("Unsatisfiable !");
+                //System.out.println("Unsatisfiable !");
                 return null;
             }
         } catch (IOException | ParseFormatException | TimeoutException e) {

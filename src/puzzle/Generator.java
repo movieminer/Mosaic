@@ -43,22 +43,15 @@ public class Generator {
     private void uniqueSolve(Game game) {
         for (int y=0; y < HEIGHT; y++){
             for (int x=0; x < WIDTH; x++){
-                if (game.getCell(x,y).getValue()==-1)
-                    break;
-
+//                if (game.getCell(x,y).getValue()==-1)
+//                    continue;
                 int old_val = game.getCell(x,y).getValue();
                 game.getCell(x,y).setValue(-1);
-                game.printBoard();
                 if (SATSolver.solve(game)!=null) {
                     game.getCell(x, y).setValue(old_val);
                 }
-                else {
-                    uniqueSolve(game);
-                }
             }
         }
-
-
     }
 
     public Game generateNewGame(String solve_method){
@@ -68,7 +61,7 @@ public class Generator {
         generateClues(game);
 
         uniqueSolve(game);
-
+        game.clearBoard();
         return game;
     }
 

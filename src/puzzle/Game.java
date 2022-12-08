@@ -14,7 +14,7 @@ public class Game {
     private final Cell[][] board;
     private int nextFreeVariable;
     private int clauses = 0;
-    private final String solve_method;
+    private String solve_method;
 
     public Game(int width, int height, String solve_method) {
         this.WIDTH = width;
@@ -50,6 +50,18 @@ public class Game {
         return board[y][x];
     }
 
+    public int getWIDTH(){
+        return WIDTH;
+    }
+
+    public int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public void setSolve_method(String solve_method){
+        this.solve_method = solve_method;
+    }
+
     public Cell[][] getBoard(){
         return board;
     }
@@ -71,6 +83,31 @@ public class Game {
             return board[y][x].toString();
         else
             return "";
+    }
+
+    public String toId(){
+        StringBuilder sb = new StringBuilder();
+        sb.append('#').append(WIDTH).append('x').append(HEIGHT).append(':');
+
+        int amount_empty = 0;
+        for (int y = 0; y < HEIGHT; y++){
+            for (int x = 0; x < WIDTH; x++){
+                if (board[y][x].getValue() == -1){
+                    amount_empty++;
+                }
+                else{
+                    if (amount_empty != 0){
+                        sb.append((char) (96 + amount_empty));
+                        amount_empty = 0;
+                    }
+                    sb.append(board[y][x].getValue());
+                }
+            }
+        }
+        if (amount_empty != 0)
+            sb.append((char) (96 + amount_empty));
+
+        return sb.toString();
     }
 
     public void solveWithDIMACS(String sol) {
@@ -114,6 +151,14 @@ public class Game {
             }
         }
         return true;
+    }
+
+    public void clearBoard(){
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WIDTH; x++) {
+                board[y][x].setType(Type.U);
+            }
+        }
     }
 
     public void printBoard() {

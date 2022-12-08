@@ -5,10 +5,8 @@ public class TestMain {
     private static int WIDTH;
     private static int HEIGHT;
 
-    public static void run(Example test){
-        WIDTH = test.getWidth();
-        HEIGHT = test.getHeight();
-        game = new Game(WIDTH, HEIGHT, "improved", test.board());
+    public static void run(Game game, String solve_method){
+        game.setSolve_method(solve_method);
         game.printBoard();
         //System.out.println(generateDIMACS(game));
         long start = System.currentTimeMillis();
@@ -20,10 +18,8 @@ public class TestMain {
         System.out.println("-------------------------------------------\n");
     }
 
-    public static void runSimple(Example test){
-        WIDTH = test.getWidth();
-        HEIGHT = test.getHeight();
-        game = new Game(WIDTH, HEIGHT, "naive", test.board());
+    public static void runSimple(Game game, String solve_method){
+        game.setSolve_method(solve_method);
         long start = System.currentTimeMillis();
         game.solveWithDIMACS(SATSolver.solve(game));
         long finish = System.currentTimeMillis();
@@ -32,6 +28,12 @@ public class TestMain {
         System.out.println("Time elapsed: " + timeElapsed + " ms");
         System.out.println("-------------------------------------------");
 
+    }
+
+    public static Game createGameFromEx(Example example, String solve_method){
+        WIDTH = example.getWidth();
+        HEIGHT = example.getHeight();
+        return new Game(WIDTH, HEIGHT, solve_method, example.board());
     }
 
     private static final String[] examples = {   "5x5:a1a4c5d46b5f0a",
@@ -73,9 +75,10 @@ public class TestMain {
 
     public static void main(String[] args) {
         int counter = 1;
-        Game generatedGame = new Generator(5,5).generateNewGame("improvedGenerator");
-        generatedGame.printBoard();
-        generatedGame.printTypes();
+        Game generatedGame = new Generator(10,10).generateNewGame("improvedGenerator");
+//        Game game = createGameFromEx(new Example("3x3:d4d"), "naive");
+        run(generatedGame, "naive");
+        System.out.println(generatedGame.toId());
 //        for (String ex : examples) {
 //            System.out.println("Run: " + counter);
 //            run(new Example(ex));
