@@ -43,13 +43,29 @@ public class Generator {
     private void uniqueSolve(Game game) {
         for (int y=0; y < HEIGHT; y++){
             for (int x=0; x < WIDTH; x++){
-//                if (game.getCell(x,y).getValue()==-1)
-//                    continue;
                 int old_val = game.getCell(x,y).getValue();
                 game.getCell(x,y).setValue(-1);
                 if (SATSolver.solve(game)!=null) {
                     game.getCell(x, y).setValue(old_val);
                 }
+            }
+        }
+    }
+
+    private void uniqueSolveTime(Game game, long start_time, long time) {
+        for (int y=0; y < HEIGHT; y++){
+            for (int x=0; x < WIDTH; x++){
+                if (System.currentTimeMillis() - start_time >= time) {
+                    game.setSolve_method("time");
+                    return;
+                }
+
+                int old_val = game.getCell(x, y).getValue();
+                game.getCell(x, y).setValue(-1);
+                if (SATSolver.solve(game) != null) {
+                    game.getCell(x, y).setValue(old_val);
+                }
+
             }
         }
     }
@@ -61,6 +77,17 @@ public class Generator {
         generateClues(game);
 
         uniqueSolve(game);
+        game.clearBoard();
+        return game;
+    }
+
+    public Game generateNewGameTime(String solve_method, long start_time, long time){
+        Game game = new Game(WIDTH, HEIGHT, solve_method);
+
+        generateTypes(game);
+        generateClues(game);
+
+        uniqueSolveTime(game, start_time, time);
         game.clearBoard();
         return game;
     }

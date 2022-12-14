@@ -71,7 +71,8 @@ public class TestMain {
 
     public static void solvePuzzles() {
         String currentsize = "";
-        for (String ex : readFile("downloads.txt")) {
+        List<String> examples = readFile("downloads.txt");
+        for (String ex : examples) {
             String size = ex.split(":")[0];
             if (!currentsize.equals(size)) {
                 System.out.println("Size: " + size);
@@ -82,26 +83,55 @@ public class TestMain {
     }
 
     public static void generatePuzzles(int amount){
-        int[] sizes = {20};
+        int[] sizes = {5,10,15};
 
         for (int size : sizes){
             System.out.println("\nSize: " + size + "x" + size);
             List<Game> gamesToSolve = new ArrayList<>();
             for (int i = 0; i < amount; i++){
                 long start = System.currentTimeMillis();
-                Game generatedGame = new Generator(size,size).generateNewGame("naiveGenerator");
+                Game generatedGame = new Generator(size,size).generateNewGame("improvedGenerator");
                 long finish = System.currentTimeMillis();
                 System.out.println(finish - start);
                 gamesToSolve.add(generatedGame);
             }
             System.out.println("\nSolving ...");
             for (int i = 0; i < amount; i++){
-                System.out.println(runExtended(gamesToSolve.get(i), "improved"));
+                System.out.println(runExtended(gamesToSolve.get(i), "naive"));
+            }
+        }
+    }
+
+    public static void generatePuzzlesOnTime(int amount){
+        int time = amount*60000;
+
+        int[] sizes = {5,10,15};
+
+        for (int size : sizes){
+            System.out.println("\nSize: " + size + "x" + size);
+            List<Game> gamesToSolve = new ArrayList<>();
+            long start_time = System.currentTimeMillis();
+            System.out.println("Generating ...");
+            while(System.currentTimeMillis() - start_time <= time){
+                long start = System.currentTimeMillis();
+                Game generatedGame = new Generator(size,size).generateNewGameTime("naiveGenerator", start_time, time);
+                long finish = System.currentTimeMillis();
+                System.out.println(finish - start);
+                if (generatedGame.getSolve_method().equals("time")){
+                    break;
+                }
+                gamesToSolve.add(generatedGame);
+            }
+            System.out.println("Generated "+gamesToSolve.size()+ " puzzle(s) in " + amount + " minutes.");
+            System.out.println("\nSolving ...");
+            for (Game g : gamesToSolve) {
+                System.out.println(runExtended(g, "improved"));
             }
         }
     }
 
     public static void main(String[] args) {
-        generatePuzzles(1);
+        //generatePuzzles(100);
+        generatePuzzlesOnTime(10);
     }
 }
