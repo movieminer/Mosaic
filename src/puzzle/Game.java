@@ -350,6 +350,45 @@ public class Game {
         return cnf;
     }
 
+    private List<List<Integer>> counterCNFnew(List<Integer> surroundingRanks, int value) {
+        int n = surroundingRanks.size();
+
+        List<Integer> x = surroundingRanks;
+        List<List<Integer>> cnf = new ArrayList<>();
+        List<List<Integer>> c = new ArrayList<>();
+
+        for (int i = 0; i < n; i++){
+            List<Integer> counter = new ArrayList<>();
+            for (int j = 0; j <= i; j++){
+                counter.add(nextFreeVariable);
+                nextFreeVariable++;
+            }
+            c.add(counter);
+        }
+
+        cnf.add(Arrays.asList(-x.get(0), c.get(0).get(0)));
+        cnf.add(Arrays.asList(x.get(0), -c.get(0).get(0)));
+
+        for (int i = 1; i < n; i++){
+            cnf.add(Arrays.asList(-x.get(i), c.get(i).get(0)));
+            cnf.add(Arrays.asList(-c.get(i-1).get(0), c.get(i).get(0)));
+            cnf.add(Arrays.asList(-c.get(i).get(0), x.get(i), c.get(i-1).get(0)));
+
+            for (int j = 1; j < Math.min(value, i); j++){
+                cnf.add(Arrays.asList(-c.get(i-1).get(j), c.get(i).get(j)));
+                cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(j-1), c.get(i).get(j)));
+
+                cnf.add(Arrays.asList(x.get(i), c.get(i-1).get(j), -c.get(i).get(j)));
+                cnf.add(Arrays.asList(c.get(i-1).get(j-1), c.get(i-1).get(j), -c.get(i).get(j)));
+            }
+        }
+
+        cnf.add(Arrays.asList(-x.get(n-1), -c.get(n-2).get(value-1)));
+        cnf.add(Arrays.asList(c.get(n-1).get(value-1)));
+
+        return cnf;
+    }
+
     private List<List<Integer>> counterCNF(List<Integer> surroundingRanks, int value) {
         int n = surroundingRanks.size();
 
