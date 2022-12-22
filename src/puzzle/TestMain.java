@@ -41,6 +41,7 @@ public class TestMain {
         game.setSolve_method(solve_method);
         long start = System.currentTimeMillis();
         game.solveWithDIMACS(SATSolver.solve(game));
+        game.printTypes();
         long finish = System.currentTimeMillis();
         return finish - start;
     }
@@ -71,7 +72,7 @@ public class TestMain {
 
     public static void solvePuzzles() {
         String currentsize = "";
-        List<String> examples = readFile("downloads.txt");
+        List<String> examples = readFile("teststring.txt");
         for (String ex : examples) {
             String size = ex.split(":")[0];
             if (!currentsize.equals(size)) {
@@ -112,7 +113,7 @@ public class TestMain {
             System.out.println("Generating ...");
             while(System.currentTimeMillis() - start_time <= time){
                 long start = System.currentTimeMillis();
-                Game generatedGame = new Generator(size,size).generateNewGameTime(generator, start_time, time);
+                Game generatedGame = new Generator(size,size).generateNewGameTimeRandom(generator, start_time, time);
                 long finish = System.currentTimeMillis();
                 if (generatedGame.getSolve_method().equals("time")){
                     break;
@@ -134,7 +135,8 @@ public class TestMain {
         String generator = args[2];
         String solver = args[3];
 
+        solvePuzzles();
         //generatePuzzles(100);
-        generatePuzzlesOnTime(time, sizes, generator, solver);
+        //generatePuzzlesOnTime(time, sizes, generator, solver);
     }
 }

@@ -350,7 +350,7 @@ public class Game {
         return cnf;
     }
 
-    private List<List<Integer>> counterCNFnew(List<Integer> surroundingRanks, int value) {
+    private List<List<Integer>> counterCNF(List<Integer> surroundingRanks, int value) {
         int n = surroundingRanks.size();
 
         List<Integer> x = surroundingRanks;
@@ -389,7 +389,7 @@ public class Game {
         return cnf;
     }
 
-    private List<List<Integer>> counterCNF(List<Integer> surroundingRanks, int value) {
+    private List<List<Integer>> counterCNFold(List<Integer> surroundingRanks, int value) {
         int n = surroundingRanks.size();
 
         List<Integer> x = surroundingRanks;
