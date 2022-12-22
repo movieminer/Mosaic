@@ -369,18 +369,29 @@ public class Game {
         cnf.add(Arrays.asList(-x.get(0), c.get(0).get(0)));
         cnf.add(Arrays.asList(x.get(0), -c.get(0).get(0)));
 
+//        cnf.add(Arrays.asList(x.get(1), -c.get(1).get(1)));
+//        cnf.add(Arrays.asList(-x.get(1), -c.get(0).get(0), c.get(1).get(1)));
+//        cnf.add(Arrays.asList(c.get(0).get(0), -c.get(1).get(1)));
+
+
         for (int i = 1; i < n; i++){
             cnf.add(Arrays.asList(-x.get(i), c.get(i).get(0)));
             cnf.add(Arrays.asList(-c.get(i-1).get(0), c.get(i).get(0)));
             cnf.add(Arrays.asList(-c.get(i).get(0), x.get(i), c.get(i-1).get(0)));
+            if (i >= value)
+                cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(value-1)));
 
-            for (int j = 1; j < Math.min(value, i); j++){
+            for (int j = 1; j < Math.min(i,value); j++){
                 cnf.add(Arrays.asList(-c.get(i-1).get(j), c.get(i).get(j)));
                 cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(j-1), c.get(i).get(j)));
 
                 cnf.add(Arrays.asList(x.get(i), c.get(i-1).get(j), -c.get(i).get(j)));
                 cnf.add(Arrays.asList(c.get(i-1).get(j-1), c.get(i-1).get(j), -c.get(i).get(j)));
             }
+
+            cnf.add(Arrays.asList(x.get(i), -c.get(i).get(i)));
+            cnf.add(Arrays.asList(-x.get(i), -c.get(i-1).get(i-1), c.get(i).get(i)));
+            cnf.add(Arrays.asList(c.get(i-1).get(i-1), -c.get(i).get(i)));
         }
 
         cnf.add(Arrays.asList(-x.get(n-1), -c.get(n-2).get(value-1)));
