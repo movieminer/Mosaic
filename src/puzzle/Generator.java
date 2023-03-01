@@ -54,6 +54,7 @@ public class Generator {
                 if (SATSolver.solve(game)!=null) {
                     game.getCell(x, y).setValue(old_val);
                 }
+                game.printBoard();
             }
         }
     }
@@ -137,7 +138,7 @@ public class Generator {
 
         uniqueSolveRandom(game, start_time, time);
         game.clearBoard();
-        System.out.println(game.toId());
+        //System.out.println(game.toId());
         return game;
     }
 }

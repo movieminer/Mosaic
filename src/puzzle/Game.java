@@ -111,6 +111,7 @@ public class Game {
     }
 
     public void solveWithDIMACS(String sol) {
+        long start = System.currentTimeMillis();
         if (sol == null) {
             return;
         }
@@ -125,6 +126,7 @@ public class Game {
             }
 
         }
+        long finish = System.currentTimeMillis();
     }
 
     public boolean checkCell(int x, int y) {
@@ -202,12 +204,12 @@ public class Game {
 
         StringBuilder sb = new StringBuilder();
 
-        for (Cell[] cells : board) {
-            for (Cell cell : cells) {
-                sb.append(cell.getRank(WIDTH)).append(" -").append(cell.getRank(WIDTH)).append(" 0").append('\n');
-                clauses++;
-            }
-        }
+//        for (Cell[] cells : board) {
+//            for (Cell cell : cells) {
+//                sb.append(cell.getRank(WIDTH)).append(" -").append(cell.getRank(WIDTH)).append(" 0").append('\n');
+//                clauses++;
+//            }
+//        }
         return sb.toString();
     }
 
@@ -345,12 +347,13 @@ public class Game {
             }
         }
         else {
-            cnf = counterCNF(surroundingRanks, value);
+            cnf = counterCNFoptimized(surroundingRanks, value);
+            //cnf = counterCNFimproved(surroundingRanks, value);
         }
         return cnf;
     }
 
-    private List<List<Integer>> counterCNF(List<Integer> surroundingRanks, int value) {
+    private List<List<Integer>> counterCNFoptimized(List<Integer> surroundingRanks, int value) {
         int n = surroundingRanks.size();
 
         List<Integer> x = surroundingRanks;
@@ -400,7 +403,7 @@ public class Game {
         return cnf;
     }
 
-    private List<List<Integer>> counterCNFold(List<Integer> surroundingRanks, int value) {
+    private List<List<Integer>> counterCNFimproved(List<Integer> surroundingRanks, int value) {
         int n = surroundingRanks.size();
 
         List<Integer> x = surroundingRanks;

@@ -69,21 +69,18 @@ public class TestMain {
         return downloads;
     }
 
-    public static void solvePuzzles() {
-        String currentsize = "";
+    public static void solvePuzzles(String solver) {
+        System.out.println("Type\tSize\tTime");
         List<String> examples = readFile("downloads.txt");
         for (String ex : examples) {
             String size = ex.split(":")[0];
-            if (!currentsize.equals(size)) {
-                System.out.println("Size: " + size);
-                currentsize = size;
-            }
-            System.out.println(runExtended(createGameFromEx(new Example(ex), "improved"), "improved"));
+
+            System.out.println("Total  " + solver + "\t" + size + "\t" + runExtended(createGameFromEx(new Example(ex), solver), solver));
         }
     }
 
     public static void generatePuzzles(int amount){
-        int[] sizes = {5,10,15};
+        int[] sizes = {5};
 
         for (int size : sizes){
             System.out.println("\nSize: " + size + "x" + size);
@@ -105,25 +102,24 @@ public class TestMain {
     public static void generatePuzzlesOnTime(int amount, int[] sizes, String generator, String solver){
         int time = amount*60000;
 
+        System.out.println("Function\tEncoding\tSize\tTime");
         for (int size : sizes){
-            System.out.println("\nSize: " + size + "x" + size);
             List<Game> gamesToSolve = new ArrayList<>();
             long start_time = System.currentTimeMillis();
-            System.out.println("Generating ...");
             while(System.currentTimeMillis() - start_time <= time){
                 long start = System.currentTimeMillis();
-                Game generatedGame = new Generator(size,size).generateNewGameTimeRandom(generator, start_time, time);
+                Game generatedGame = new Generator(size,size).generateNewGameTime(generator, start_time, time);
                 long finish = System.currentTimeMillis();
                 if (generatedGame.getSolve_method().equals("time")){
                     break;
                 }
                 gamesToSolve.add(generatedGame);
-                System.out.println(finish - start);
+                System.out.println("Generating" + "\t" + (generator.equals("improvedGenerator") ?"Improved":"Naive")
+                        + "\t" + size + "x" + size + "\t" + (finish - start));
             }
-            System.out.println("Generated "+gamesToSolve.size()+ " puzzle(s) in " + amount + " minutes.");
-            System.out.println("\nSolving ...");
             for (Game g : gamesToSolve) {
-                System.out.println(runExtended(g, solver));
+                System.out.println("Solving" + "\t" + (solver.equals("naive") ?"Improved with Naive":"Naive with Improved")
+                        + "\t" + size + "x" + size + "\t" + runExtended(g, solver));
             }
         }
     }
@@ -134,8 +130,7 @@ public class TestMain {
         String generator = args[2];
         String solver = args[3];
 
-        //solvePuzzles();
-        //generatePuzzles(100);
-        generatePuzzlesOnTime(time, sizes, generator, solver);
+        solvePuzzles(solver);
+        //generatePuzzlesOnTime(time, sizes, generator, solver);
     }
 }

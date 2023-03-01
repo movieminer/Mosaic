@@ -19,6 +19,7 @@ public class SATSolver {
     public SATSolver(){}
 
     public static String generateDIMACS(Game game){
+        long start = System.currentTimeMillis();
         StringBuilder sb = new StringBuilder();
         String dimacs;
         if (game.getSolve_method().equals("naiveGenerator") || game.getSolve_method().equals("improvedGenerator"))
@@ -29,6 +30,7 @@ public class SATSolver {
         sb.append("c dimacs of Mosaic\n");
         sb.append("p cnf ").append(game.getVariableCount()).append(" ").append(game.getClausesCount()).append("\n");
         sb.append(dimacs);
+        long finish = System.currentTimeMillis();
         return sb.toString();
     }
 
@@ -56,11 +58,16 @@ public class SATSolver {
     }
 
     public static String solve(Game game){
+        long startdimacs = System.currentTimeMillis();
         createFile(game);
 
         ISolver solver = SolverFactory.newDefault();
         String solution = null;
         Reader reader = new DimacsReader(solver);
+        long finishdimacs = System.currentTimeMillis();
+
+        //System.out.println("Dimacs "+game.getSolve_method()+"\t"+game.getWIDTH()+"x"+game.getHEIGHT()+"\t"+(finishdimacs-startdimacs));
+        long start = System.currentTimeMillis();
         try {
             IProblem problem = reader.parseInstance(filename);
             if (problem.isSatisfiable()) {
@@ -76,6 +83,8 @@ public class SATSolver {
         } catch (ContradictionException e) {
             throw new RuntimeException(e);
         }
+        long finish = System.currentTimeMillis();
+        //System.out.println("SATSol "+game.getSolve_method()+"\t"+game.getWIDTH()+"x"+game.getHEIGHT()+"\t"+(finish-start));
         return solution;
     }
 }

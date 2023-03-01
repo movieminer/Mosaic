@@ -7,11 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="javafx" level="application" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="com.github.dpaukov:combinatoricslib3:3.3.2" level="project" />
-    <orderEntry type="library" name="github.dpaukov.combinatoricslib3" level="project" />
-    <orderEntry type="library" name="ow2.sat4j.core" level="project" />
-    <orderEntry type="library" name="org.ow2.sat4j:org.ow2.sat4j.core:2.3.5" level="application" />
+    <orderEntry type="library" exported="" name="com.github.dpaukov:combinatoricslib3:3.3.2" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" name="ow2.sat4j.core" level="application" />
   </component>
 </module>
